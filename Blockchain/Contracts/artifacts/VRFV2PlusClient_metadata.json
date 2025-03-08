@@ -1,0 +1,58 @@
+{
+	"compiler": {
+		"version": "0.8.19+commit.7dd6d404"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "EXTRA_ARGS_V1_TAG",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Contracts/Lottery_flattened.sol": "VRFV2PlusClient"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Contracts/Lottery_flattened.sol": {
+			"keccak256": "0x07e15f0bc2e414c453f7f5fcd78e7c80e775749c133278aa399f16cb20d8fe35",
+			"urls": [
+				"bzz-raw://a16513ce2b98802c5cd7d8c76ed9dc5ce9e78cba94dcfc27aa0ea831a1b6b5d7",
+				"dweb:/ipfs/QmQRttjcNKNDs8uaVLk7ikc2VvndhALVYipmfTDn7ugagt"
+			]
+		}
+	},
+	"version": 1
+}
