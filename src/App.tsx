@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Header from './components/Header';
-import Home from './pages/Home';
-import HowItWorks from './pages/HowItWorks';
-import BuyTickets from './pages/BuyTickets';
-import PastWinners from './pages/PastWinners';
-import FAQ from './pages/FAQ';
+import Header from './frontend/components/Header';
+import Home from './frontend/pages/Home';
+import HowItWorks from './frontend/pages/HowItWorks';
+import BuyTickets from './frontend/pages/BuyTickets';
+import PastWinners from './frontend/pages/PastWinners';
+import FAQ from './frontend/pages/FAQ';
 
 function App() {
   const [connected, setConnected] = useState(false);
