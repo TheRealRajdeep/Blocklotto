@@ -13,7 +13,7 @@ export function Header() {
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center space-x-2 text-primary font-bold text-xl">
               <Ticket className="h-6 w-6" />
-              <span>Crypto Lottery</span>
+              <span>BlockLotto</span>
             </Link>
 
             <nav className="hidden md:flex space-x-4">
