@@ -188,6 +188,7 @@ contract Lottery is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     /**
      * @notice Update the interval between lottery draws.
      */
+     
     function updateInterval(uint256 newInterval) external checkOwner {
         interval = newInterval;
     }
