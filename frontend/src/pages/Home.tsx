@@ -1,73 +1,160 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Ticket } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import PageTransition from '../components/PageTransition';
-import LotteryStats from '../components/LotteryStats';
+"use client"
 
-interface HomeProps {
-  connected: boolean;
-}
+import { useState } from "react"
+import { useWallet } from "../hooks/useWallet"
+import { useLottery } from "../hooks/useLottery"
+import { Ticket, Trophy, Users, Timer, Gift } from "lucide-react"
 
-const Home: React.FC<HomeProps> = ({ connected }) => {
+export function Home() {
+  const { provider, account } = useWallet()
+  const { lotteryId, players, lastWinner, loading, winners, buyTickets, entryFee } = useLottery(provider)
+  const [ticketCount, setTicketCount] = useState(1)
+
+  const handleBuyTickets = async () => {
+    if (!account) return
+    await buyTickets(ticketCount)
+  }
+
+  const formatTimeAgo = (timestamp: number) => {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000)
+    if (seconds < 60) return "just now"
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes}m ago`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours}h ago`
+    const days = Math.floor(hours / 24)
+    return `${days}d ago`
+  }
+
   return (
-    <PageTransition>
-      <section className="px-4 pt-32 pb-20">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center"
-          >
-            <motion.h1 
-              className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              Decentralized Lottery System
-            </motion.h1>
-            <motion.p 
-              className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              Join the future of fair and transparent lottery games. Powered by blockchain technology,
-              ensuring complete randomness and automatic payouts.
-            </motion.p>
-            <motion.div 
-              className="flex justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Link to="/buy-tickets">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold flex items-center gap-2"
-                >
-                  <Ticket size={20} />
-                  Buy Tickets
-                </motion.button>
-              </Link>
-            </motion.div>
-          </motion.div>
+    <div className="space-y-8">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to Crypto Lottery</h1>
+        <p className="text-xl text-gray-600">Try your luck in the decentralized lottery!</p>
+      </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mt-20"
-          >
-            <LotteryStats />
-          </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="flex items-center space-x-3 mb-4">
+            <Trophy className="h-6 w-6 text-yellow-500" />
+            <h2 className="text-xl font-semibold">Current Round</h2>
+          </div>
+          <p className="text-3xl font-bold text-primary">#{lotteryId}</p>
         </div>
-      </section>
-    </PageTransition>
-  );
-};
 
-export default Home;
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="flex items-center space-x-3 mb-4">
+            <Users className="h-6 w-6 text-blue-500" />
+            <h2 className="text-xl font-semibold">Players</h2>
+          </div>
+          <p className="text-3xl font-bold text-primary">{players.length}</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="flex items-center space-x-3 mb-4">
+            <Trophy className="h-6 w-6 text-purple-500" />
+            <h2 className="text-xl font-semibold">Last Winner</h2>
+          </div>
+          <p className="text-lg font-medium text-primary">
+            {lastWinner ? `${lastWinner.slice(0, 6)}...${lastWinner.slice(-4)}` : "No winner yet"}
+          </p>
+        </div>
+      </div>
+
+      <div className="bg-white p-8 rounded-xl shadow-md">
+        <div className="flex items-center space-x-3 mb-6">
+          <Ticket className="h-6 w-6 text-green-500" />
+          <h2 className="text-2xl font-semibold">Buy Tickets</h2>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Ticket Price: {Number.parseFloat(entryFee).toFixed(6)} ETH</p>
+            <input
+              type="number"
+              min="1"
+              value={ticketCount}
+              onChange={(e) => setTicketCount(Math.max(1, Number.parseInt(e.target.value)))}
+              className="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <button
+            onClick={handleBuyTickets}
+            disabled={!account || loading}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+              account ? "bg-indigo-600 text-white hover:bg-indigo-700" : "bg-gray-400 text-white cursor-not-allowed"
+            }`}
+          >
+            {loading ? "Buying..." : `Buy ${ticketCount} Ticket${ticketCount > 1 ? "s" : ""}`}
+          </button>
+          <div className="text-sm text-gray-600">
+            Total: {(Number.parseFloat(entryFee) * ticketCount).toFixed(6)} ETH
+          </div>
+        </div>
+
+        {!account && <p className="mt-4 text-sm text-gray-600">Please connect your wallet to buy tickets</p>}
+      </div>
+
+      <div className="bg-white p-8 rounded-xl shadow-md">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <Gift className="h-6 w-6 text-pink-500" />
+            <h2 className="text-2xl font-semibold">Recent Winners</h2>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {winners.length > 0 ? (
+            winners.map((winner) => (
+              <div
+                key={winner.lotteryId}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="bg-primary/10 p-2 rounded-full">
+                    <Trophy className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Round #{winner.lotteryId}</p>
+                    <p className="text-sm text-gray-600">
+                      {winner.address.slice(0, 6)}...{winner.address.slice(-4)}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-primary">{Number.parseFloat(winner.prize).toFixed(4)} ETH</p>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Timer className="h-4 w-4 mr-1" />
+                    {formatTimeAgo(winner.timestamp)}
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <Trophy className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+              <p>No winners yet. Be the first one!</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-yellow-100 p-8 rounded-xl shadow-md">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-yellow-800 mb-4">Congratulations, Winner! 🎉</h2>
+          <p className="text-xl text-yellow-700">You've won 1 time!</p>
+        </div>
+        <div className="mt-6">
+          <div className="flex justify-between items-center bg-yellow-200 p-4 rounded-lg mb-4">
+            <p className="text-lg font-semibold text-yellow-800">Current Tickets</p>
+            <p className="text-2xl font-bold text-yellow-800">0</p>
+          </div>
+          <div className="flex justify-between items-center bg-yellow-200 p-4 rounded-lg">
+            <p className="text-lg font-semibold text-yellow-800">Total Winnings</p>
+            <p className="text-2xl font-bold text-yellow-800">0.0286 ETH</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,44 +1,31 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import Header from './components/Header';
-import Home from './pages/Home';
-import HowItWorks from './pages/HowItWorks';
-import BuyTickets from './pages/BuyTickets';
-import PastWinners from './pages/PastWinners';
-import FAQ from './pages/FAQ';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Toaster } from "react-hot-toast"
+import { Header } from "./components/Header"
+import { UserStatus } from "./components/UserStatus"
+import { Home } from "./pages/Home"
+import { Dashboard } from "./pages/Dashboard"
+import { About } from "./pages/About"
 
 function App() {
-  const [connected, setConnected] = useState(false);
-
-  const handleConnect = () => {
-    setConnected(true);
-  };
-
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-        <Header connected={connected} onConnect={handleConnect} />
-        <AnimatedRoutes connected={connected} />
+    <Router>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <UserStatus />
+          <div className="mt-6">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </div>
+        </main>
+        <Toaster position="bottom-right" />
       </div>
-    </BrowserRouter>
-  );
+    </Router>
+  )
 }
 
-function AnimatedRoutes({ connected }: { connected: boolean }) {
-  const location = useLocation();
+export default App
 
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home connected={connected} />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/buy-tickets" element={<BuyTickets connected={connected} />} />
-        <Route path="/winners" element={<PastWinners />} />
-        <Route path="/faq" element={<FAQ />} />
-      </Routes>
-    </AnimatePresence>
-  );
-}
-
-export default App;

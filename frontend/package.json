@@ -1,5 +1,5 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "lottery-dapp",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "ethers": "^6.11.1",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.22.3",
-    "framer-motion": "^11.0.8"
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

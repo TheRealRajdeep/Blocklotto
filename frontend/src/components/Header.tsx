@@ -1,77 +1,65 @@
-import React from 'react';
-import { Trophy, Wallet } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+"use client"
+import { Link } from "react-router-dom"
+import { Ticket, Home, User, Info } from "lucide-react"
+import { useWallet } from "../hooks/useWallet"
 
-interface HeaderProps {
-  connected: boolean;
-  onConnect: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ connected, onConnect }) => {
-  const location = useLocation();
-
-  const navItems = [
-    { path: '/how-it-works', label: 'How it Works' },
-    { path: '/buy-tickets', label: 'Buy Tickets' },
-    { path: '/winners', label: 'Past Winners' },
-    { path: '/faq', label: 'FAQ' }
-  ];
+export function Header() {
+  const { account, balance, connectWallet, disconnectWallet } = useWallet()
 
   return (
-    <motion.header 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="bg-gray-900/50 backdrop-blur-sm fixed w-full z-50"
-    >
-      <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2 group">
-          <motion.div
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Trophy className="w-8 h-8 text-blue-500" />
-          </motion.div>
-          <span className="text-xl font-bold group-hover:text-blue-400 transition-colors">
-            BlockLotto
-          </span>
-        </Link>
-        
-        <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="relative"
-            >
-              <span className={`text-gray-300 hover:text-white transition-colors ${
-                location.pathname === item.path ? 'text-white' : ''
-              }`}>
-                {item.label}
-              </span>
-              {location.pathname === item.path && (
-                <motion.div
-                  layoutId="underline"
-                  className="absolute left-0 right-0 h-0.5 bg-blue-500"
-                  initial={false}
-                />
-              )}
+    <header className="bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex items-center space-x-8">
+            <Link to="/" className="flex items-center space-x-2 text-primary font-bold text-xl">
+              <Ticket className="h-6 w-6" />
+              <span>Crypto Lottery</span>
             </Link>
-          ))}
-        </nav>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onConnect}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center gap-2"
-        >
-          <Wallet size={18} />
-          {connected ? 'Connected' : 'Connect Wallet'}
-        </motion.button>
+            <nav className="hidden md:flex space-x-4">
+              <Link to="/" className="flex items-center space-x-1 text-gray-700 hover:text-primary">
+                <Home className="h-4 w-4" />
+                <span>Home</span>
+              </Link>
+              <Link to="/dashboard" className="flex items-center space-x-1 text-gray-700 hover:text-primary">
+                <User className="h-4 w-4" />
+                <span>Dashboard</span>
+              </Link>
+              <Link to="/about" className="flex items-center space-x-1 text-gray-700 hover:text-primary">
+                <Info className="h-4 w-4" />
+                <span>About</span>
+              </Link>
+            </nav>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            {account ? (
+              <div className="flex items-center space-x-4">
+                <div className="text-sm text-gray-600">
+                  <div>
+                    {account.slice(0, 6)}...{account.slice(-4)}
+                  </div>
+                  <div>{Number.parseFloat(balance).toFixed(4)} ETH</div>
+                </div>
+                <button
+                  onClick={disconnectWallet}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Disconnect
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={connectWallet}
+                className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Connect Wallet
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-    </motion.header>
-  );
-};
+    </header>
+  )
+}
 
-export default Header;
