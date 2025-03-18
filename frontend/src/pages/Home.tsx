@@ -81,9 +81,8 @@ export function Home() {
           <button
             onClick={handleBuyTickets}
             disabled={!account || loading}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              account ? "bg-indigo-600 text-white hover:bg-indigo-700" : "bg-gray-400 text-white cursor-not-allowed"
-            }`}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${account ? "bg-indigo-600 text-white hover:bg-indigo-700" : "bg-gray-400 text-white cursor-not-allowed"
+              }`}
           >
             {loading ? "Buying..." : `Buy ${ticketCount} Ticket${ticketCount > 1 ? "s" : ""}`}
           </button>
@@ -139,22 +138,6 @@ export function Home() {
         </div>
       </div>
 
-      <div className="bg-yellow-100 p-8 rounded-xl shadow-md">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-yellow-800 mb-4">Congratulations, Winner! 🎉</h2>
-          <p className="text-xl text-yellow-700">You've won 1 time!</p>
-        </div>
-        <div className="mt-6">
-          <div className="flex justify-between items-center bg-yellow-200 p-4 rounded-lg mb-4">
-            <p className="text-lg font-semibold text-yellow-800">Current Tickets</p>
-            <p className="text-2xl font-bold text-yellow-800">0</p>
-          </div>
-          <div className="flex justify-between items-center bg-yellow-200 p-4 rounded-lg">
-            <p className="text-lg font-semibold text-yellow-800">Total Winnings</p>
-            <p className="text-2xl font-bold text-yellow-800">0.0286 ETH</p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
